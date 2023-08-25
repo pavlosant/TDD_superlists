@@ -24,21 +24,19 @@ class NewVisitorTest(unittest.TestCase):
         self.assertIn('To-Do', header_text)
 
         # User is asked to enter a to-do item straight away
-        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox = self.browser.find_element('id', 'id_new_item')
         self.assertEqual(
             inputbox.get_attribute('placeholder'), 'Enter a to-do item'
         )
 
         # User types "Buy peacock feathers"
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
+        time.sleep(10)
         # When User press enters the page updates and now the page lists
         # "1.Buy peacock feathers" as an item in a todo list
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == '1: Buy peacock feathers' for row in rows)
-        )
+        table = self.browser.find_element('id', 'id_list_table')
+        rows = table.find_elements('tag name', 'tr')
+        self.assertIn('1: Buy peacock feathers', [row.text for row in rows]),
 
         # Theres is still a text box inviting for another item
         # User enters whatever as second item
