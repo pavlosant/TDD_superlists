@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from django.template.loader import render_to_string
 
 from lists.views import home_page
-
+from lists.models import Item
 # Create your tests here.
 
 
@@ -24,16 +24,23 @@ class HomePageTest(TestCase):
         self.assertIn('A new list item', response.content.decode())
         self.assertTemplateUsed(response, 'home.html')
 
-        # request = HttpRequest()
-        # response = home_page(request)
 
-        # html = response.content.decode('utf8')
+class ItemModelTest(TestCase):
 
-        # expected_html= render_to_string('home.html')
-        # self.assertEqual(html, expected_html)
+    def test_saving_and_retrieving_items(self):
+        first_item = Item()
+        first_item.text = 'The first list item'
+        first_item.save()
 
-        # self.assertTrue(html.startswith('<html>'))
-        # self.assertIn('<title>To-Do lists</title>', html)
-        # self.assertTrue(html.strip().endswith('</html>'))
+        second_item = Item()
+        second_item.text = 'Item the second'
+        second_item.save()
 
-        # assertTemplateUsed only works for responses with Test Client self.client.get()
+        saved_items = Item.objects.all()
+        self.assertEqual(saved_items.count(), 2)
+
+        first_saved_item = saved_items[0]
+        second_saved_item = saved_items[1]
+
+        self.assertEqual(first_saved_item.text, 'The first list item')
+        self.assertEqual(second_saved_item.text, 'Item the second')
